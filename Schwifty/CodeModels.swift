@@ -130,10 +130,7 @@ class Variable {
             print("numberERROR")
             return
         }
-        
-        
     }
-    
 }
 
 enum Types: String {
