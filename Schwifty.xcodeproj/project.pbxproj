@@ -11,6 +11,10 @@
 		3C67A71B23428A2100E972DE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C67A71A23428A2100E972DE /* ViewController.swift */; };
 		3C67A71D23428A2300E972DE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C67A71C23428A2300E972DE /* Assets.xcassets */; };
 		3C67A72023428A2300E972DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C67A71E23428A2300E972DE /* Main.storyboard */; };
+		3C67A72923428A3500E972DE /* defaultInput in Resources */ = {isa = PBXBuildFile; fileRef = 3C67A72823428A3500E972DE /* defaultInput */; };
+		3C67A72B23429C7900E972DE /* CodeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C67A72A23429C7900E972DE /* CodeModels.swift */; };
+		3C67A72D2342A12100E972DE /* Engine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C67A72C2342A12100E972DE /* Engine.swift */; };
+		3C67A72F234455DA00E972DE /* StateSchwifty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C67A72E234455DA00E972DE /* StateSchwifty.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +25,10 @@
 		3C67A71F23428A2300E972DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3C67A72123428A2300E972DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C67A72223428A2300E972DE /* Schwifty.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Schwifty.entitlements; sourceTree = "<group>"; };
+		3C67A72823428A3500E972DE /* defaultInput */ = {isa = PBXFileReference; lastKnownFileType = text; path = defaultInput; sourceTree = "<group>"; };
+		3C67A72A23429C7900E972DE /* CodeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeModels.swift; sourceTree = "<group>"; };
+		3C67A72C2342A12100E972DE /* Engine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Engine.swift; sourceTree = "<group>"; };
+		3C67A72E234455DA00E972DE /* StateSchwifty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateSchwifty.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,7 +63,11 @@
 			children = (
 				3C67A71823428A2100E972DE /* AppDelegate.swift */,
 				3C67A71A23428A2100E972DE /* ViewController.swift */,
+				3C67A72823428A3500E972DE /* defaultInput */,
 				3C67A71C23428A2300E972DE /* Assets.xcassets */,
+				3C67A72A23429C7900E972DE /* CodeModels.swift */,
+				3C67A72E234455DA00E972DE /* StateSchwifty.swift */,
+				3C67A72C2342A12100E972DE /* Engine.swift */,
 				3C67A71E23428A2300E972DE /* Main.storyboard */,
 				3C67A72123428A2300E972DE /* Info.plist */,
 				3C67A72223428A2300E972DE /* Schwifty.entitlements */,
@@ -122,6 +134,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C67A71D23428A2300E972DE /* Assets.xcassets in Resources */,
+				3C67A72923428A3500E972DE /* defaultInput in Resources */,
 				3C67A72023428A2300E972DE /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -133,8 +146,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C67A72B23429C7900E972DE /* CodeModels.swift in Sources */,
+				3C67A72D2342A12100E972DE /* Engine.swift in Sources */,
 				3C67A71B23428A2100E972DE /* ViewController.swift in Sources */,
 				3C67A71923428A2100E972DE /* AppDelegate.swift in Sources */,
+				3C67A72F234455DA00E972DE /* StateSchwifty.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

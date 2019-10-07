@@ -8,11 +8,20 @@
 
 import Cocoa
 
-class ViewController: NSViewController {
+let schwifty = SchwiftEngine()
 
+class ViewController: NSViewController, SchwiftyDelegate, NSTextViewDelegate {
+    
+    
+
+    @IBOutlet weak var outPutField: NSTextField!
+    @IBOutlet weak var inPutField: NSTextView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        schwifty.delegate = self
+        inPutField.string = defaultInput
+        inPutField.delegate = self
         // Do any additional setup after loading the view.
     }
 
@@ -21,7 +30,21 @@ class ViewController: NSViewController {
         // Update the view, if already loaded.
         }
     }
+    
+    @IBAction func inputUpdate(_ sender: Any) {
+        schwifty.rawString = inPutField.string
+}
+    func textDidChange(_ notification: Notification) {
+         schwifty.rawString = inPutField.string
+    }
+    
+    func update(string: String?) {
+        log(text: string ?? "nil")
+    }
 
+    func log(text: String) {
+        outPutField.stringValue = text + "\r" + outPutField.stringValue
+    }
 
 }
 
