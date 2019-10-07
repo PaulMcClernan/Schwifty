@@ -8,12 +8,10 @@
 
 import Cocoa
 
-let schwifty = SchwiftEngine()
+let schwifty = SchwiftyCompiler()
 
 class ViewController: NSViewController, SchwiftyDelegate, NSTextViewDelegate {
     
-    
-
     @IBOutlet weak var outPutField: NSTextField!
     @IBOutlet weak var inPutField: NSTextView!
     
@@ -24,27 +22,26 @@ class ViewController: NSViewController, SchwiftyDelegate, NSTextViewDelegate {
         inPutField.delegate = self
         // Do any additional setup after loading the view.
     }
-
+    
     override var representedObject: Any? {
         didSet {
-        // Update the view, if already loaded.
+            // Update the view, if already loaded.
         }
     }
     
     @IBAction func inputUpdate(_ sender: Any) {
         schwifty.rawString = inPutField.string
-}
+    }
     func textDidChange(_ notification: Notification) {
-         schwifty.rawString = inPutField.string
+        schwifty.rawString = inPutField.string
     }
     
-    func update(string: String?) {
-        log(text: string ?? "nil")
+    func update() {
+        outPutField.stringValue = schwifty.rawString ?? "¡ERROR!"
+        if schwifty.attributedString != nil {
+            outPutField.attributedStringValue = schwifty.attributedString!
+        }
     }
-
-    func log(text: String) {
-        outPutField.stringValue = text + "\r" + outPutField.stringValue
-    }
-
+    
 }
 

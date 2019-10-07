@@ -8,23 +8,37 @@
 
 import Foundation
 
-class SymbolTable {
-    var rawCodeString = ""
-    var lines: [String] = []
-    
-    init(rawCodeString: String, lines: [String]) {
-        self.rawCodeString = rawCodeString
-        self.lines = lines
-    }
-    
-    
+struct ErrorSchwifty: Codable {
+    var type = ""
+    var pos = 0
+    var length = 0
 }
 
-class Line {
+class SchwiftyState: Codable {
+    var errors: [ErrorSchwifty] = []
+    var table: SymbolTable = SymbolTable(lines: [])
+}
+
+class SymbolTable: Codable {
+    
+    var lines: [Line] = []
+    var variables: [Variable] = []
+    
+    init(lines: [Line]) {
+        self.lines = lines
+    }
+}
+
+class Line: Codable {
     var text =  ""
     var pos = 0
     var words: [Word] = []
     var theOperator: Operators? = nil
+    
+    enum CodingKeys: CodingKey {
+        case text
+        case words
+    }
     
     init(text: String, pos: Int, words: [Word], theOperator: Operators?) {
         self.text = text
@@ -34,102 +48,120 @@ class Line {
     }
 }
 
-class Word {
+class Word: Codable {
     var string =  ""
     var pos = 0
     var length = 0
     
-    var command: Commands? = nil
-    var theOperator: Operators? = nil
     var variable: Variable? = nil
+    
+    enum CodingKeys: CodingKey {
+        case string
+        case variable
+    }
     
     init(string: String) {
         self.string = string
         
-        for (_,theCommand) in Commands.allCases.enumerated() {
-            if string == theCommand.rawValue {
-                command = theCommand
-            }
-        }
-        for (_,anOpertator) in Operators.allCases.enumerated() {
-            if string == anOpertator.rawValue {
-                theOperator = anOpertator
-            }
-        }
-        
-        if theOperator == nil {
-            variable = Variable(newVariable: string, varName: string)
-        }
+        variable = Variable(newVariable: string, varName: string)
         
     }
-    
-    
 }
 
-class Variable {
+class Variable: Codable {
     var name = ""
-    var type = Types.errorType
-    var string: String? = nil
+    
+    var string: String = ""
     var number: NSNumber? = nil
+    var command: Commands? = nil
+    var theOperator: Operators? = nil
+    
+    var type = Types.errorType
+    
+    enum CodingKeys: CodingKey {
+        case name
+        case string
+    }
     
     init(newVariable: String, varName: String) {
         string = newVariable
         name = varName
         
         assingType()
+        
+        if type == .errorType {
+            
+        }
     }
     
     func assingType() {
+        for (_,theCommand) in Commands.allCases.enumerated() {
+            if string == theCommand.rawValue {
+                command = theCommand
+                type = .CommandsType
+                return
+            }
+        }
+        for (_,anOpertator) in Operators.allCases.enumerated() {
+            if string == anOpertator.rawValue {
+                theOperator = anOpertator
+                type = .OperatorType
+                return
+            }
+        }
+        
         let formatter = NumberFormatter()
         formatter.locale = Locale.current
-        let assignedNumber = formatter.number(from: string!)
+        let assignedNumber = formatter.number(from: string)
         
         if assignedNumber == nil {
-            type = Types.StringType
-            print("STRING \(string!)")
-            
             if string == "false" {
                 number = NSNumber(value: false)
-                type = Types.BoolType
-                print("BOOL \(String(describing: number))")
+                type = .BoolType
+                return
             }
             else if string == "true" {
                 number = NSNumber(value: true)
-                type = Types.BoolType
-                print("BOOL \(String(describing: number))")
+                type = .BoolType
+                return
             }
             
+            if (string.hasPrefix("\"") && string.hasSuffix("\"")) {
+                type = .StringType
+                return
+            } else if ( (string.hasPrefix("\"")) && !(string.hasSuffix("\"")) ) {
+                type = .errorType
+                return
+            } else if ( !(string.hasPrefix("\"")) && (string.hasSuffix("\"")) ) {
+                type = .errorType
+                return
+            }
+            
+            type = .varType
             return
         }
         
-        let numberType = CFNumberGetType(assignedNumber)
+        number = assignedNumber!
+        let numberType = CFNumberGetType(number)
         
         switch numberType {
         case .charType:
-            number = NSNumber(value: assignedNumber!.boolValue)
-            type = Types.BoolType
-            print("CHAR \(String(describing: number))")
+            type = .BoolType
         //Bool
         case .sInt8Type, .sInt16Type, .sInt32Type, .sInt64Type, .shortType, .intType, .longType, .longLongType, .cfIndexType, .nsIntegerType:
-            number = NSNumber(value: assignedNumber!.intValue)
-            type = Types.IntType
-            print("INT \(String(describing: assignedNumber))")
+            type = .IntType
         //Int
         case .doubleType:
-            number = NSNumber(value: assignedNumber!.doubleValue)
-            type = Types.doubleType
-            print("DOUBLE \(String(describing: assignedNumber))")
+            type = .doubleType
         //Double
         case .float32Type, .float64Type, .floatType, .cgFloatType:
-            number = NSNumber(value: assignedNumber!.floatValue)
-            type = Types.FloatType
-            print("FLOAT \(String(describing: assignedNumber))")
+            type = .FloatType
         //Float
         default:
-            type = Types.errorType
-            print("numberERROR")
-            return
+            type = .errorType
         }
+        
+        //        print("WORDTYPE: \(type.rawValue)")
     }
 }
 
@@ -137,6 +169,7 @@ enum Types: String {
     case errorType
     case CommandsType
     case OperatorType
+    case varType
     case StringType
     case IntType
     case doubleType
@@ -145,6 +178,8 @@ enum Types: String {
 }
 
 enum Commands: String, CaseIterable {
+    case Unassigned = "Unassigned"
+    case Print = "print"
     case Dev = "Dev"
     case UI = "UI"
 }
@@ -199,6 +234,10 @@ let d = false
 let e = -3.14
 let f = 5.0
 let g = -a
+let h = "House"
+let i = "ion"
+let j = "jet
+let k = "redKite
 
 a += a
 
