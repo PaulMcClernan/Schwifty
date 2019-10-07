@@ -16,6 +16,8 @@ class SymbolTable {
         self.rawCodeString = rawCodeString
         self.lines = lines
     }
+    
+    
 }
 
 class Line {
@@ -33,42 +35,111 @@ class Line {
 }
 
 class Word {
-    var text =  ""
+    var string =  ""
     var pos = 0
     var length = 0
     
+    var command: Commands? = nil
     var theOperator: Operators? = nil
-    var variable: variable? = nil
-}
-
-class variable {
-    var name = ""
-    var type = VariableType.errorType
-    var string: String? = nil
-    var int: Int? = Int(Int64.max)
-    var float: Float? = nil
-    var double: Double? = nil
-    var bool: Bool? = nil
+    var variable: Variable? = nil
     
-    init(variable: Any?, varName: String) {
-        name = varName
+    init(string: String) {
+        self.string = string
         
-        if variable == nil {
-            type = VariableType.errorType
-            return
+        for (_,theCommand) in Commands.allCases.enumerated() {
+            if string == theCommand.rawValue {
+                command = theCommand
+            }
+        }
+        for (_,anOpertator) in Operators.allCases.enumerated() {
+            if string == anOpertator.rawValue {
+                theOperator = anOpertator
+            }
         }
         
-        switch variable {
-        case is String:
-            string = variable as? String
-        default:
-            print(variable ?? "error")
+        if theOperator == nil {
+            variable = Variable(newVariable: string, varName: string)
         }
         
     }
+    
+    
 }
-enum VariableType {
+
+class Variable {
+    var name = ""
+    var type = Types.errorType
+    var string: String? = nil
+    var number: NSNumber? = nil
+    
+    init(newVariable: String, varName: String) {
+        string = newVariable
+        name = varName
+        
+        assingType()
+    }
+    
+    func assingType() {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale.current
+        let assignedNumber = formatter.number(from: string!)
+        
+        if assignedNumber == nil {
+            type = Types.StringType
+            print("STRING \(string!)")
+            
+            if string == "false" {
+                number = NSNumber(value: false)
+                type = Types.BoolType
+                print("BOOL \(String(describing: number))")
+            }
+            else if string == "true" {
+                number = NSNumber(value: true)
+                type = Types.BoolType
+                print("BOOL \(String(describing: number))")
+            }
+            
+            return
+        }
+        
+        let numberType = CFNumberGetType(assignedNumber)
+        
+        switch numberType {
+        case .charType:
+            number = NSNumber(value: assignedNumber!.boolValue)
+            type = Types.BoolType
+            print("CHAR \(String(describing: number))")
+        //Bool
+        case .sInt8Type, .sInt16Type, .sInt32Type, .sInt64Type, .shortType, .intType, .longType, .longLongType, .cfIndexType, .nsIntegerType:
+            number = NSNumber(value: assignedNumber!.intValue)
+            type = Types.IntType
+            print("INT \(String(describing: assignedNumber))")
+        //Int
+        case .doubleType:
+            number = NSNumber(value: assignedNumber!.doubleValue)
+            type = Types.doubleType
+            print("DOUBLE \(String(describing: assignedNumber))")
+        //Double
+        case .float32Type, .float64Type, .floatType, .cgFloatType:
+            number = NSNumber(value: assignedNumber!.floatValue)
+            type = Types.FloatType
+            print("FLOAT \(String(describing: assignedNumber))")
+        //Float
+        default:
+            type = Types.errorType
+            print("numberERROR")
+            return
+        }
+        
+        
+    }
+    
+}
+
+enum Types: String {
     case errorType
+    case CommandsType
+    case OperatorType
     case StringType
     case IntType
     case doubleType
@@ -76,16 +147,41 @@ enum VariableType {
     case BoolType
 }
 
-enum Operators: String {
+enum Commands: String, CaseIterable {
+    case Dev = "Dev"
+    case UI = "UI"
+}
+
+enum Operators: String, CaseIterable {
     case letOp = "let"
     case varOp = "var"
-    case ifOp = "if"
+    
+    case assignOp = "="
+    case additionAssignOp = "+="
+    case subAssignOp = "-="
+    
     case addOp = "+"
-    case minusOp = "-"
+    case subOp = "-"
     case multOp = "*"
     case divOp = "/"
-    case assignOp = "="
+    
+    case remainderOp = "%"
+    
     case equalsOp = "=="
+    case notOp = "!="
+    
+    case greaterOp = ">"
+    case lessop = "<"
+    case greaterEqualOp = ">="
+    case lessEqualop = "<="
+    
+    case leftParentheses = "("
+    case rightParentheses = ")"
+    
+    case leftBracket = "{"
+    case rightBracket = "}"
+    
+    case ifOp = "if"
 }
 
 let defaultInput = """
@@ -96,5 +192,20 @@ if a = 5 {
 a = b + a
 }
 
+print(a)
+
 let c = a + b
+
+print(c)
+
+let d = false
+let e = -3.14
+let f = 5.0
+let g = -a
+
+a += a
+
+print(a)
+
+
 """

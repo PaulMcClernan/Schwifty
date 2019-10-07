@@ -36,34 +36,40 @@ class SchwiftEngine {
         for (int, lineString) in codeLines.enumerated() {
             let line = Line(text: lineString, pos: int, words: [], theOperator: nil)
             
-            processLine(theLine: line)
+            analyzeLine(theLine: line)
             //            print("L\(int): " + line)
         }
         
     }
     
-    func processLine(theLine: Line) {
+    func analyzeLine(theLine: Line) {
         var line: Line = theLine
         
         let codeWords = line.text.components(separatedBy: .whitespaces)
         if codeWords.count == 0 {return}
         if codeWords.count < 3 {return}
         
-        if let prefixOperator = Operators.init(rawValue: codeWords[0]) {
-            switch prefixOperator {
-            case .letOp, .varOp:
-                print(prefixOperator)
-                createVariable(theLine: line, codeWords: codeWords, operator: prefixOperator)
-            case .assignOp:
-                print("=")
-            default:
-                break
-            }
-            
+        for (i,word) in codeWords.enumerated() {
+            line.words.append(Word(string: word))
             
         }
+    }
         
-   }
+//        if let prefixOperator = Operators.init(rawValue: codeWords[0]) {
+//            switch prefixOperator {
+//            case .letOp, .varOp:
+//                print(prefixOperator)
+//                createVariable(theLine: line, codeWords: codeWords, operator: prefixOperator)
+//            case .assignOp:
+//                print("=")
+//            default:
+//                break
+//            }
+//
+//
+//        }
+//
+//   }
     
     func createVariable(theLine: Line,codeWords:[String], operator:Operators) {
         
