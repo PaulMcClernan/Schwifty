@@ -37,8 +37,13 @@ class ViewController: NSViewController, SchwiftyDelegate, NSTextViewDelegate {
     }
     
     func update() {
-        outPutField.stringValue = schwifty.rawString ?? "¡ERROR!"
+//        outPutField.stringValue = schwifty.rawString ?? "¡ERROR!"
+        
         if schwifty.attributedString != nil {
+            print("attributedString")
+//            let m = inPutField.selectedRanges
+//            inPutField.textStorage?.setAttributedString(schwifty.attributedString!)
+//            inPutField.selectedRanges = m
             outPutField.attributedStringValue = schwifty.attributedString!
         }
     }

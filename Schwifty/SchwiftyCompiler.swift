@@ -22,7 +22,7 @@ class SchwiftyCompiler: Codable {
                 interpretLines(codeString: codeString)
                 
                 syntaxHighlighter = SchwiftyHighlighter(compiler: self)
-                
+                self.attributedString = syntaxHighlighter?.attributedString
                 delegate?.update()
                 
             }
