@@ -32,7 +32,7 @@ class Line: Codable {
     var pos: Int = -1
     var words: [Word] = [] {
         didSet {
-            print(("Line:\(pos) "), self.words.last!.variable!.string, (": "), self.words.last!.variable!.type.rawValue)
+//            print(self.words.last!.variable!.string, ("    :"), self.words.last!.variable!.typeDescription())
         }
     }
     var theOperator: Operators? = nil
@@ -80,7 +80,36 @@ class Variable: Codable {
     var command: Commands? = nil
     var theOperator: Operators? = nil
     
-    var type = Types.errorType
+    var value: Variable? = nil
+    
+    var type = Types.ErrorType
+    
+    func typeDescription() -> String{
+        var typeString = "Undescribed"
+        
+        if (self.type == .CommandsType) {
+            typeString = command!.rawValue
+            return typeString
+            
+        }
+        
+        if (self.type == .OperatorType) {
+            typeString = self.theOperator!.rawValue
+            return typeString
+            
+        }
+        
+        if (self.value != nil) {
+            if (self.value!.isValue()) {
+                typeString = self.value!.string
+            }
+        }
+        else {
+            typeString = self.type.rawValue
+        }
+        
+        return typeString
+    }
     
     enum CodingKeys: CodingKey {
         case name
@@ -93,7 +122,7 @@ class Variable: Codable {
         
         assingType()
         
-        if type == .errorType {
+        if type == .ErrorType {
             
         }
     }
@@ -112,10 +141,10 @@ class Variable: Codable {
             type = .StringType
             isString = true
         } else if ContainsValidQoute(string: String(string.prefix(1))) && !ContainsValidQoute(string: String(string.suffix(1))) {
-            type = .errorType
+            type = .ErrorType
             isString = true
         } else if !ContainsValidQoute(string: String(string.prefix(1))) && ContainsValidQoute(string: String(string.suffix(1))) {
-            type = .errorType
+            type = .ErrorType
             isString = true
         }
         
@@ -158,7 +187,7 @@ class Variable: Codable {
             
             if isString() {return}
             
-            type = .varType
+            type = .VarType
             return
         }
         
@@ -178,30 +207,67 @@ class Variable: Codable {
             type = .IntType
         //Int
         case .doubleType:
-            type = .doubleType
+            type = .DoubleType
         //Double
         case .float32Type, .float64Type, .floatType, .cgFloatType:
             type = .FloatType
         //Float
         default:
-            type = .errorType
+            type = .ErrorType
         }
         
-        //        print("WORDTYPE: \(type.rawValue)")
     }
+    
+    func isValue() -> Bool {
+        if self.value != nil {
+            return self.value!.type.isValue()
+        }
+        return false
+    }
+    
+    func description() -> String{
+        if self.value != nil {
+            var newString = ""
+            newString = "\(self.string) = \(self.value!.string)"
+            return newString
+        }
+        return "I have no value"
+    }
+    
+    
 }
 
 enum Types: String {
-    case errorType
+    case ErrorType
+    
     case LineNumberType
+    
     case CommandsType
     case OperatorType
-    case varType
+    case VarType
+    
     case StringType
     case IntType
-    case doubleType
+    case DoubleType
     case FloatType
     case BoolType
+    
+    func isValue() -> Bool {
+        switch self {
+        case .StringType, .IntType, .DoubleType, .FloatType, .BoolType:
+            return true
+        default:
+            return false
+        }
+    }
+    func isNumber() -> Bool {
+        switch self {
+        case .IntType, .DoubleType, .FloatType, .BoolType:
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 enum Commands: String, CaseIterable {
@@ -265,17 +331,7 @@ enum Operators: String, CaseIterable {
 let defaultInput = """
 var a = 5
 let b = 1
-
-if a = 5 {
-a = b + a
-}
-
-print(a)
-
 let c = a + b
-
-print(c)
-
 let d = false
 let e = -3.14
 let f = 5.0
@@ -284,6 +340,18 @@ let h = "House"
 let i = "ion"
 let j = "jet
 let k = "redKite
+
+if a = 5 {
+a = b + a
+}
+
+f += 1
+b = b + 1
+
+print(a)
+
+
+print(c)
 
 a += a
 

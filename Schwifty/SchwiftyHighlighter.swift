@@ -90,7 +90,7 @@ class SchwiftyHighlighter: Codable {
         multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.textColor
         
         switch variable.type {
-        case .errorType:
+        case .ErrorType:
             font = NSFont.monospacedSystemFont(ofSize: kDefaultFontSize, weight: .regular)
             multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemRed
             multipleAttributes[NSAttributedString.Key.backgroundColor] = NSColor(calibratedHue: 0.0, saturation: 1.0, brightness: 0.0, alpha: 0.25)
@@ -101,12 +101,12 @@ class SchwiftyHighlighter: Codable {
             multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemGreen
         case .OperatorType:
             AssignOperatorAttributes(variable, &multipleAttributes)
-        case .varType:
+        case .VarType:
             font = NSFont.monospacedSystemFont(ofSize: kDefaultFontSize, weight: .light)
             multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemTeal
         case .StringType:
             multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.textColor
-        case .IntType, .doubleType, .FloatType:
+        case .IntType, .DoubleType, .FloatType:
             font = NSFont.monospacedSystemFont(ofSize: kDefaultFontSize, weight: .regular)
             multipleAttributes[NSAttributedString.Key.font] = font
             multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemYellow

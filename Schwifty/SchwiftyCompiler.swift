@@ -18,7 +18,7 @@ class SchwiftyCompiler: Codable {
     var syntaxHighlighter: SchwiftyHighlighter? = nil
     var attributedString: NSAttributedString? = nil
     
-    // MARK: rawString
+    // MARK: - rawString
     // Set this to start the compiler.
     var rawString: String? = "" {
         didSet {
@@ -46,7 +46,7 @@ class SchwiftyCompiler: Codable {
         }
     }
     
-    // MARK: Init
+    // MARK: - Init
     init(highlightSyntax: Bool, string: String?) {
         self.highlightSyntax = highlightSyntax
         if string != nil {
@@ -60,7 +60,7 @@ class SchwiftyCompiler: Codable {
         case rawString
     }
     
-    // MARK: Interpreter - Line
+    // MARK: - Interpreter - Line
     //Splits the raw code string into string components based on newlines.
     func interpretLines(codeString: String) {
         let codeLines = codeString.components(separatedBy: .newlines)
@@ -71,13 +71,13 @@ class SchwiftyCompiler: Codable {
             // MARK: Line number
             // TODO: Line number support
             /*
-            let lineNumberWord = Word(string: (String(int) + "\t"))
-            lineNumberWord.variable?.type = .LineNumberType
-            line.words.append(lineNumberWord)
-            self.state.variables.append(lineNumberWord.variable!)
-            */
+             let lineNumberWord = Word(string: (String(int) + "\t"))
+             lineNumberWord.variable?.type = .LineNumberType
+             line.words.append(lineNumberWord)
+             self.state.variables.append(lineNumberWord.variable!)
+             */
             
-            print("\r newLine")
+//            print("\r")
             // MARK: Interpreter - Word
             //Splits the line String into string components based on whitespace.
             let codeWords = line.text.components(separatedBy: .whitespaces)
@@ -86,17 +86,47 @@ class SchwiftyCompiler: Codable {
                 //Creates a new word and adds its variable to the state.
                 let newWord = Word(string: word)
                 line.words.append(newWord)
-                self.state.variables.append(newWord.variable!)
             }
             
-            // MARK: Line Pattern
-            // 
-            
+            state.lines.append(line)
+            // MARK: - Line Pattern
+            //patterns
+            if line.words.count > 3 {
+                
+                // MARK: Create new variable
+                var variable = line.words[0].variable!
+                if (variable.theOperator?.isCreateVariable() ?? false) {
+                    
+                    if !(line.words[3].variable!.type.isValue()) {
+                        line.words[3].variable!.type = .ErrorType
+                        print("notSupportedValue")
+                        continue
+                    }
+                    
+                    line.words[1].variable!.value = line.words[3].variable!
+                    state.variables.append(line.words[1].variable!)
+                    print(line.words[1].variable!.description())
+                    continue
+                }
+                
+                // MARK: Modify existing variable
+                variable = line.words[1].variable!
+                if variable.theOperator?.isAssignOperator() ?? false {
+                    for (_,existingVariable) in state.variables.enumerated() {
+                        if (line.words[0].variable!.string == existingVariable.string) {
+                            print("I have already been assign:Line:\(line.pos)")
+                        }
+                    }
+                }
+                
+            }
             
             //Adds line to state
-            state.lines.append(line)
+            
         }
-        
+        for (_,stateVariable) in state.variables.enumerated() {
+            print(stateVariable.string,(": "), stateVariable.value!.string)
+        }
     }
     
 }
