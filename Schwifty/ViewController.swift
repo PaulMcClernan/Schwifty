@@ -12,15 +12,14 @@ let schwifty = SchwiftyCompiler()
 
 class ViewController: NSViewController, SchwiftyDelegate, NSTextViewDelegate {
     
-    @IBOutlet weak var outPutField: NSTextField!
     @IBOutlet weak var inPutField: NSTextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        schwifty.delegate = self
-        inPutField.string = defaultInput
-        inPutField.delegate = self
         // Do any additional setup after loading the view.
+        schwifty.delegate = self
+        inPutField.delegate = self
+        schwifty.rawString = defaultInput
     }
     
     override var representedObject: Any? {
@@ -29,22 +28,20 @@ class ViewController: NSViewController, SchwiftyDelegate, NSTextViewDelegate {
         }
     }
     
-    @IBAction func inputUpdate(_ sender: Any) {
-        schwifty.rawString = inPutField.string
-    }
+
     func textDidChange(_ notification: Notification) {
-        schwifty.rawString = inPutField.string
+        if let field = notification.object as? NSTextView {
+        schwifty.rawString = field.string
+        }
     }
     
     func update() {
-//        outPutField.stringValue = schwifty.rawString ?? "¡ERROR!"
-        
         if schwifty.attributedString != nil {
-            print("attributedString")
-//            let m = inPutField.selectedRanges
-//            inPutField.textStorage?.setAttributedString(schwifty.attributedString!)
-//            inPutField.selectedRanges = m
-            outPutField.attributedStringValue = schwifty.attributedString!
+            let m = inPutField.selectedRanges
+            inPutField.textStorage?.setAttributedString(schwifty.attributedString!)
+            inPutField.selectedRanges = m
+        } else {
+            inPutField.string = schwifty.rawString ?? "no code"
         }
     }
     

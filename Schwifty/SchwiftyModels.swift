@@ -16,17 +16,9 @@ struct ErrorSchwifty: Codable {
 
 class SchwiftyState: Codable {
     var errors: [ErrorSchwifty] = []
-    var table: SymbolTable = SymbolTable(lines: [])
-}
-
-class SymbolTable: Codable {
-    
     var lines: [Line] = []
     var variables: [Variable] = []
     
-    init(lines: [Line]) {
-        self.lines = lines
-    }
 }
 
 class Line: Codable {
@@ -94,14 +86,41 @@ class Variable: Codable {
         }
     }
     
+    func ContainsValidQoute(string: String) -> Bool {
+        if string == "\"" || string == "\u{201C}" || string == "\u{201D}" {
+            return true
+        }
+        return false
+    }
+    
+    func isString() -> Bool {
+        var isString = false
+        
+        
+        if ContainsValidQoute(string: String(string.prefix(1))) && ContainsValidQoute(string: String(string.suffix(1))) {
+            type = .StringType
+            isString = true
+        } else if ContainsValidQoute(string: String(string.prefix(1))) && !ContainsValidQoute(string: String(string.suffix(1))) {
+            type = .errorType
+            isString = true
+        } else if !ContainsValidQoute(string: String(string.prefix(1))) && ContainsValidQoute(string: String(string.suffix(1))) {
+            type = .errorType
+            isString = true
+        }
+        
+        return isString
+    }
+    
     func assingType() {
         for (_,theCommand) in Commands.allCases.enumerated() {
-            if string == theCommand.rawValue {
+            let stringComponents = string.components(separatedBy: theCommand.rawValue)
+            if stringComponents.count > 1 {
                 command = theCommand
                 type = .CommandsType
                 return
             }
         }
+        
         for (_,anOpertator) in Operators.allCases.enumerated() {
             if string == anOpertator.rawValue {
                 theOperator = anOpertator
@@ -126,16 +145,7 @@ class Variable: Codable {
                 return
             }
             
-            if (string.hasPrefix("\"") && string.hasSuffix("\"")) {
-                type = .StringType
-                return
-            } else if ( (string.hasPrefix("\"")) && !(string.hasSuffix("\"")) ) {
-                type = .errorType
-                return
-            } else if ( !(string.hasPrefix("\"")) && (string.hasSuffix("\"")) ) {
-                type = .errorType
-                return
-            }
+            if isString() {return}
             
             type = .varType
             return

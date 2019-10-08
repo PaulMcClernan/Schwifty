@@ -17,10 +17,9 @@ class SchwiftyHighlighter: Codable {
         case compiler
     }
     
-    init(compiler: SchwiftyCompiler) {
+    init(compiler: SchwiftyCompiler, rawString: String) {
         self.compiler = compiler
-        self.attributedString = NSAttributedString(string: self.compiler.rawString ?? "")
-        
+        self.attributedString = NSAttributedString(string: rawString)
         //        let encoder = JSONEncoder()
         //        do {
         //            let jsonData = try encoder.encode(compiler)
@@ -32,7 +31,7 @@ class SchwiftyHighlighter: Codable {
         
         let newAttributed = NSMutableAttributedString(string: "")
         
-        for (_,line) in compiler.state.table.lines.enumerated() {
+        for (_,line) in compiler.state.lines.enumerated() {
             for (i,word) in line.words.enumerated() {
                 newAttributed.append(AttributesForVariable(variable: word.variable!))
                 if i != line.words.count - 1 {
@@ -41,6 +40,7 @@ class SchwiftyHighlighter: Codable {
             }
             newAttributed.append(NSAttributedString(string: "\r"))
         }
+        
         self.attributedString = newAttributed
         
     }
@@ -59,9 +59,9 @@ class SchwiftyHighlighter: Codable {
      }
      */
     
-    let kDefaultFontSize: CGFloat = 12.0
+    let kDefaultFontSize: CGFloat = 15.0
     
-    fileprivate func AssignOperatorAttributes(_ variable: Variable, _ multipleAttributes: inout [NSAttributedString.Key : Any]) {
+    private func AssignOperatorAttributes(_ variable: Variable, _ multipleAttributes: inout [NSAttributedString.Key : Any]) {
         var font = NSFont.systemFont(ofSize: kDefaultFontSize, weight: .medium)
         multipleAttributes[NSAttributedString.Key.font] = font
         
@@ -89,13 +89,15 @@ class SchwiftyHighlighter: Codable {
         
         switch variable.type {
         case .errorType:
+            font = NSFont.monospacedSystemFont(ofSize: kDefaultFontSize, weight: .regular)
             multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemRed
             multipleAttributes[NSAttributedString.Key.backgroundColor] = NSColor(calibratedHue: 0.0, saturation: 1.0, brightness: 0.0, alpha: 0.25)
         case .CommandsType:
-            multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemPurple
+            multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemGreen
         case .OperatorType:
             AssignOperatorAttributes(variable, &multipleAttributes)
         case .varType:
+            font = NSFont.monospacedSystemFont(ofSize: kDefaultFontSize, weight: .light)
             multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemTeal
         case .StringType:
             multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.textColor
@@ -104,7 +106,7 @@ class SchwiftyHighlighter: Codable {
             multipleAttributes[NSAttributedString.Key.font] = font
             multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemYellow
         case .BoolType:
-            font = NSFont.systemFont(ofSize: kDefaultFontSize, weight: .regular)
+            font = NSFont.monospacedSystemFont(ofSize: kDefaultFontSize, weight: .semibold)
             multipleAttributes[NSAttributedString.Key.font] = font
             multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemPink
         }

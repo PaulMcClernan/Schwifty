@@ -18,10 +18,11 @@ class SchwiftyCompiler: Codable {
                 
                 ///Begin analyzing string from input
                 state.errors = []
-                state.table = SymbolTable(lines: [])
-                interpretLines(codeString: codeString)
+                state.lines = []
+                state.variables = []
                 
-                syntaxHighlighter = SchwiftyHighlighter(compiler: self)
+                interpretLines(codeString: codeString)
+                syntaxHighlighter = SchwiftyHighlighter(compiler: self, rawString: codeString)
                 self.attributedString = syntaxHighlighter?.attributedString
                 delegate?.update()
                 
@@ -42,7 +43,7 @@ class SchwiftyCompiler: Codable {
             let line = Line(text: lineString, pos: int, words: [], theOperator: nil)
             
             interpretLine(theLine: line)
-            state.table.lines.append(line)
+            state.lines.append(line)
         }
         
     }
@@ -51,13 +52,11 @@ class SchwiftyCompiler: Codable {
         let line: Line = theLine
         
         let codeWords = line.text.components(separatedBy: .whitespaces)
-        if codeWords.count == 0 {return}
-        if codeWords.count < 3 {return}
-        
+
         for (_,word) in codeWords.enumerated() {
             let newWord = Word(string: word)
             line.words.append(newWord)
-            self.state.table.variables.append(newWord.variable!)
+            self.state.variables.append(newWord.variable!)
         }
     }    
     
