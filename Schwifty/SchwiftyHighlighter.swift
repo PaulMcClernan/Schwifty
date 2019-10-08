@@ -48,6 +48,7 @@ class SchwiftyHighlighter: Codable {
     /*For Ref
      enum Types: String {
      case errorType
+     case LineNumber
      case CommandsType
      case OperatorType
      case varType
@@ -60,6 +61,7 @@ class SchwiftyHighlighter: Codable {
      */
     
     let kDefaultFontSize: CGFloat = 15.0
+    let kDefaultFontSizeSmall: CGFloat = 11.0
     
     private func AssignOperatorAttributes(_ variable: Variable, _ multipleAttributes: inout [NSAttributedString.Key : Any]) {
         var font = NSFont.systemFont(ofSize: kDefaultFontSize, weight: .medium)
@@ -92,6 +94,9 @@ class SchwiftyHighlighter: Codable {
             font = NSFont.monospacedSystemFont(ofSize: kDefaultFontSize, weight: .regular)
             multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemRed
             multipleAttributes[NSAttributedString.Key.backgroundColor] = NSColor(calibratedHue: 0.0, saturation: 1.0, brightness: 0.0, alpha: 0.25)
+        case .LineNumberType:
+            font = NSFont.systemFont(ofSize: kDefaultFontSize, weight: .light)
+            multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemGray
         case .CommandsType:
             multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemGreen
         case .OperatorType:

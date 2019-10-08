@@ -8,7 +8,7 @@
 
 import Cocoa
 
-let schwifty = SchwiftyCompiler()
+let schwifty = SchwiftyCompiler(highlightSyntax: true, string: nil)
 
 class ViewController: NSViewController, SchwiftyDelegate, NSTextViewDelegate {
     
@@ -28,7 +28,6 @@ class ViewController: NSViewController, SchwiftyDelegate, NSTextViewDelegate {
         }
     }
     
-
     func textDidChange(_ notification: Notification) {
         if let field = notification.object as? NSTextView {
         schwifty.rawString = field.string
@@ -37,9 +36,9 @@ class ViewController: NSViewController, SchwiftyDelegate, NSTextViewDelegate {
     
     func update() {
         if schwifty.attributedString != nil {
-            let m = inPutField.selectedRanges
+            let selectedRanges = inPutField.selectedRanges
             inPutField.textStorage?.setAttributedString(schwifty.attributedString!)
-            inPutField.selectedRanges = m
+            inPutField.selectedRanges = selectedRanges
         } else {
             inPutField.string = schwifty.rawString ?? "no code"
         }

@@ -8,12 +8,16 @@
 
 import Foundation
 
+// MARK: - Error
+// TODO: Add more detailed error type for debugging
 struct ErrorSchwifty: Codable {
     var type = ""
     var pos = 0
     var length = 0
 }
 
+// MARK: State
+// This is where the compiler stores it's state. Conforms to Codable to theoretically support state save.
 class SchwiftyState: Codable {
     var errors: [ErrorSchwifty] = []
     var lines: [Line] = []
@@ -21,10 +25,16 @@ class SchwiftyState: Codable {
     
 }
 
+// MARK: Line
+// This is where the compiler stores it's state. Conforms to Codable to theoretically support state save.
 class Line: Codable {
     var text =  ""
-    var pos = 0
-    var words: [Word] = []
+    var pos: Int = -1
+    var words: [Word] = [] {
+        didSet {
+            print(("Line:\(pos) "), self.words.last!.variable!.string, (": "), self.words.last!.variable!.type.rawValue)
+        }
+    }
     var theOperator: Operators? = nil
     
     enum CodingKeys: CodingKey {
@@ -38,6 +48,8 @@ class Line: Codable {
         self.words = words
         self.theOperator = theOperator
     }
+    
+    
 }
 
 class Word: Codable {
@@ -96,7 +108,6 @@ class Variable: Codable {
     func isString() -> Bool {
         var isString = false
         
-        
         if ContainsValidQoute(string: String(string.prefix(1))) && ContainsValidQoute(string: String(string.suffix(1))) {
             type = .StringType
             isString = true
@@ -152,6 +163,11 @@ class Variable: Codable {
         }
         
         number = assignedNumber!
+        
+        if type == .LineNumberType {
+            return
+        }
+        
         let numberType = CFNumberGetType(number)
         
         switch numberType {
@@ -177,6 +193,7 @@ class Variable: Codable {
 
 enum Types: String {
     case errorType
+    case LineNumberType
     case CommandsType
     case OperatorType
     case varType
@@ -197,10 +214,26 @@ enum Commands: String, CaseIterable {
 enum Operators: String, CaseIterable {
     case letOp = "let"
     case varOp = "var"
+    func isCreateVariable() -> Bool {
+        switch self {
+        case .letOp, .varOp:
+            return true
+        default:
+            return false
+        }
+    }
     
     case assignOp = "="
     case additionAssignOp = "+="
     case subAssignOp = "-="
+    func isAssignOperator() -> Bool {
+        switch self {
+        case .assignOp, .additionAssignOp, .subAssignOp:
+            return true
+        default:
+            return false
+        }
+    }
     
     case addOp = "+"
     case subOp = "-"
@@ -222,6 +255,9 @@ enum Operators: String, CaseIterable {
     
     case leftBracket = "{"
     case rightBracket = "}"
+    
+    case leftCrotchet = "["
+    case rightCrotchet = "]"
     
     case ifOp = "if"
 }
@@ -252,6 +288,5 @@ let k = "redKite
 a += a
 
 print(a)
-
 
 """
