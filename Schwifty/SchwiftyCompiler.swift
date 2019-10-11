@@ -46,8 +46,11 @@ class SchwiftyCompiler: Codable {
         }
     }
     
-    // MARK: - Init
-    init(highlightSyntax: Bool, string: String?) {
+    // MARK: Init
+    // TODO: Add support for creating a light compiler for a highlighter
+    /*
+     This would theoretically support a highlighter for applications that don't need a full compiler.
+     */init(highlightSyntax: Bool, string: String?) {
         self.highlightSyntax = highlightSyntax
         if string != nil {
             self.rawString = string!
@@ -64,6 +67,7 @@ class SchwiftyCompiler: Codable {
     //Splits the raw code string into string components based on newlines.
     func interpretLines(codeString: String) {
         let codeLines = codeString.components(separatedBy: .newlines)
+        print("\r\t Interpreted Lines\r")
         for (int, lineString) in codeLines.enumerated() {
             
             let line = Line(text: lineString, pos: int, words: [], theOperator: nil)
@@ -77,7 +81,6 @@ class SchwiftyCompiler: Codable {
              self.state.variables.append(lineNumberWord.variable!)
              */
             
-//            print("\r")
             // MARK: Interpreter - Word
             //Splits the line String into string components based on whitespace.
             let codeWords = line.text.components(separatedBy: .whitespaces)
@@ -89,32 +92,42 @@ class SchwiftyCompiler: Codable {
             }
             
             state.lines.append(line)
+            
+            // MARK: - *End of Compiler Light*
+            // Past here lies any code that should be used for scripting.
+            
             // MARK: - Line Pattern
             //patterns
             if line.words.count > 3 {
+                let lineNumber = line.pos
+                
                 
                 // MARK: Create new variable
-                var variable = line.words[0].variable!
-                if (variable.theOperator?.isCreateVariable() ?? false) {
+                let variable1 = line.words[0] /// likely let/var or var ie "Let " or "foo "
+                let variable2 = line.words[1] /// likely var or assignOp ie "foo " or "= "
+                let variable3 = line.words[3] /// likely var ie "foo " or "\"foo\"" | "3.14" | "false"
+                
+                if (variable1.theOperator?.isCreateVariable() ?? false) {
                     
-                    if !(line.words[3].variable!.type.isValue()) {
-                        line.words[3].variable!.type = .ErrorType
-                        print("notSupportedValue")
+                    // Unknown type or error
+                    if !(variable3.type.isValue()) {
+                        variable3.type = .ErrorType
+                        print("L:\(lineNumber): \(variable3.string) : Not a supported value")
                         continue
                     }
                     
-                    line.words[1].variable!.value = line.words[3].variable!
-                    state.variables.append(line.words[1].variable!)
-                    print(line.words[1].variable!.description())
+                    // var found
+                    variable2.value = variable3
+                    state.variables.append(variable2)
+                    print(("L:\(lineNumber): "), variable2.description())
                     continue
                 }
                 
-                // MARK: Modify existing variable
-                variable = line.words[1].variable!
-                if variable.theOperator?.isAssignOperator() ?? false {
+                // Modify existing variable
+                if variable2.theOperator?.isAssignOperator() ?? false {
                     for (_,existingVariable) in state.variables.enumerated() {
-                        if (line.words[0].variable!.string == existingVariable.string) {
-                            print("I have already been assign:Line:\(line.pos)")
+                        if (variable1.string == existingVariable.string) {
+                            print("L:\(lineNumber): \(variable1.string) \(variable2.theOperator!.string()) : I have already been assigned")
                         }
                     }
                 }
@@ -124,6 +137,8 @@ class SchwiftyCompiler: Codable {
             //Adds line to state
             
         }
+        
+        print("\r\t Assigned Vars\r")
         for (_,stateVariable) in state.variables.enumerated() {
             print(stateVariable.string,(": "), stateVariable.value!.string)
         }

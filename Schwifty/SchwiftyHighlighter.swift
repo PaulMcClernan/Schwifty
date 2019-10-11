@@ -17,6 +17,11 @@ class SchwiftyHighlighter: Codable {
         case compiler
     }
     
+    // MARK: Init
+    // TODO: Add support for creating a highlighter without a compiler.
+    /*
+     This would theoretically support a highlighter for applications that don't need a full compiler.
+     */
     init(compiler: SchwiftyCompiler, rawString: String) {
         self.compiler = compiler
         self.attributedString = NSAttributedString(string: rawString)
@@ -31,9 +36,10 @@ class SchwiftyHighlighter: Codable {
         
         let newAttributed = NSMutableAttributedString(string: "")
         
+        
         for (_,line) in compiler.state.lines.enumerated() {
             for (i,word) in line.words.enumerated() {
-                newAttributed.append(AttributesForVariable(variable: word.variable!))
+                newAttributed.append(AttributesForVariable(variable: word))
                 if i != line.words.count - 1 {
                     newAttributed.append(NSAttributedString(string: " "))
                 }
@@ -63,7 +69,7 @@ class SchwiftyHighlighter: Codable {
     let kDefaultFontSize: CGFloat = 15.0
     let kDefaultFontSizeSmall: CGFloat = 11.0
     
-    private func AssignOperatorAttributes(_ variable: Variable, _ multipleAttributes: inout [NSAttributedString.Key : Any]) {
+    private func AssignOperatorAttributes(_ variable: Word, _ multipleAttributes: inout [NSAttributedString.Key : Any]) {
         var font = NSFont.systemFont(ofSize: kDefaultFontSize, weight: .medium)
         multipleAttributes[NSAttributedString.Key.font] = font
         
@@ -81,7 +87,7 @@ class SchwiftyHighlighter: Codable {
         
     }
     
-    func AttributesForVariable(variable: Variable) -> NSAttributedString {
+    func AttributesForVariable(variable: Word) -> NSAttributedString {
         var multipleAttributes = [NSAttributedString.Key : Any]()
         
         var font = NSFont.systemFont(ofSize: kDefaultFontSize, weight: .medium)

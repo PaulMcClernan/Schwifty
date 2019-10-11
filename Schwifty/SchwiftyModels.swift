@@ -21,7 +21,7 @@ struct ErrorSchwifty: Codable {
 class SchwiftyState: Codable {
     var errors: [ErrorSchwifty] = []
     var lines: [Line] = []
-    var variables: [Variable] = []
+    var variables: [Word] = []
     
 }
 
@@ -53,34 +53,16 @@ class Line: Codable {
 }
 
 class Word: Codable {
-    var string =  ""
-    var pos = 0
-    var length = 0
-    
-    var variable: Variable? = nil
-    
-    enum CodingKeys: CodingKey {
-        case string
-        case variable
-    }
-    
-    init(string: String) {
-        self.string = string
-        
-        variable = Variable(newVariable: string, varName: string)
-        
-    }
-}
-
-class Variable: Codable {
     var name = ""
+    var pos = 0
     
     var string: String = ""
+    
     var number: NSNumber? = nil
     var command: Commands? = nil
     var theOperator: Operators? = nil
     
-    var value: Variable? = nil
+    var value: Word? = nil
     
     var type = Types.ErrorType
     
@@ -111,13 +93,35 @@ class Variable: Codable {
         return typeString
     }
     
+    func description() -> String{
+        if self.value != nil {
+            var newString = ""
+            newString = "\(self.string) = \(self.value!.string)"
+            return newString
+        }
+        return "I have no value"
+    }
+    
     enum CodingKeys: CodingKey {
         case name
         case string
+        case pos
+        case value
+    }
+    
+    init(string: String) {
+        self.string = string
+        self.name = string
+        
+        assingType()
+        
+        if type == .ErrorType {
+            
+        }
     }
     
     init(newVariable: String, varName: String) {
-        string = newVariable
+        self.string = newVariable
         name = varName
         
         assingType()
@@ -142,10 +146,10 @@ class Variable: Codable {
             isString = true
         } else if ContainsValidQoute(string: String(string.prefix(1))) && !ContainsValidQoute(string: String(string.suffix(1))) {
             type = .ErrorType
-            isString = true
+            isString = false
         } else if !ContainsValidQoute(string: String(string.prefix(1))) && ContainsValidQoute(string: String(string.suffix(1))) {
             type = .ErrorType
-            isString = true
+            isString = false
         }
         
         return isString
@@ -185,7 +189,7 @@ class Variable: Codable {
                 return
             }
             
-            if isString() {return}
+            if isString() {type = .StringType;return}
             
             type = .VarType
             return
@@ -224,16 +228,6 @@ class Variable: Codable {
         }
         return false
     }
-    
-    func description() -> String{
-        if self.value != nil {
-            var newString = ""
-            newString = "\(self.string) = \(self.value!.string)"
-            return newString
-        }
-        return "I have no value"
-    }
-    
     
 }
 
@@ -289,6 +283,10 @@ enum Operators: String, CaseIterable {
         }
     }
     
+    func string() -> String {
+        return self.rawValue
+    }
+    
     case assignOp = "="
     case additionAssignOp = "+="
     case subAssignOp = "-="
@@ -334,7 +332,7 @@ let b = 1
 let c = a + b
 let d = false
 let e = -3.14
-let f = 5.0
+let f = 5
 let g = -a
 let h = "House"
 let i = "ion"
