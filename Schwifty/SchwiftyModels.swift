@@ -19,31 +19,46 @@ struct ErrorSchwifty: Codable {
 // MARK: State
 // This is where the compiler stores it's state. Conforms to Codable to theoretically support state save.
 class SchwiftyState: Codable {
+    var version = 0.1
+    
     var errors: [ErrorSchwifty] = []
     var lines: [Line] = []
     var variables: [Word] = []
+    
+    func hasVariable(variable: Word) -> Bool {
+        
+        for (_,existingVariable) in self.variables.enumerated() {
+            if (variable.string == existingVariable.string) {
+                return true
+            }
+        }
+        
+        return false
+    }
     
 }
 
 // MARK: Line
 // This is where the compiler stores it's state. Conforms to Codable to theoretically support state save.
 class Line: Codable {
-    var text =  ""
+    var string =  ""
     var pos: Int = -1
-    var words: [Word] = [] {
-        didSet {
-//            print(self.words.last!.variable!.string, ("    :"), self.words.last!.variable!.typeDescription())
-        }
-    }
+    
+    var hasError = false
+    var isEditing = false
+    
+    var words: [Word] = []
+    
     var theOperator: Operators? = nil
     
     enum CodingKeys: CodingKey {
-        case text
+        case string
+        case pos
         case words
     }
     
     init(text: String, pos: Int, words: [Word], theOperator: Operators?) {
-        self.text = text
+        self.string = text
         self.pos = pos
         self.words = words
         self.theOperator = theOperator
@@ -139,20 +154,13 @@ class Word: Codable {
     }
     
     func isString() -> Bool {
-        var isString = false
         
         if ContainsValidQoute(string: String(string.prefix(1))) && ContainsValidQoute(string: String(string.suffix(1))) {
             type = .StringType
-            isString = true
-        } else if ContainsValidQoute(string: String(string.prefix(1))) && !ContainsValidQoute(string: String(string.suffix(1))) {
-            type = .ErrorType
-            isString = false
-        } else if !ContainsValidQoute(string: String(string.prefix(1))) && ContainsValidQoute(string: String(string.suffix(1))) {
-            type = .ErrorType
-            isString = false
+            return true
         }
         
-        return isString
+        return false
     }
     
     func assingType() {
@@ -173,6 +181,8 @@ class Word: Codable {
             }
         }
         
+        if isString() {return}
+        
         let formatter = NumberFormatter()
         formatter.locale = Locale.current
         let assignedNumber = formatter.number(from: string)
@@ -189,17 +199,17 @@ class Word: Codable {
                 return
             }
             
-            if isString() {type = .StringType;return}
             
             type = .VarType
             return
         }
         
-        number = assignedNumber!
         
         if type == .LineNumberType {
             return
         }
+        
+        self.number = assignedNumber
         
         let numberType = CFNumberGetType(number)
         
@@ -338,6 +348,10 @@ let h = "House"
 let i = "ion"
 let j = "jet
 let k = "redKite
+let l = 01234567891011
+let m = 200e500
+let n = f
+let o = 0
 
 if a = 5 {
 a = b + a

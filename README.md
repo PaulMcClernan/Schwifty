@@ -1,4 +1,4 @@
-# Schwifty
+# Schwifty 0.1
 Lite Version of Swift: for fun
 
 The intent of Schwifty is to be even more light weight and easy to use than Swfit. It does this by dropping support for everything but assigning variables, arithmetic and if statements.

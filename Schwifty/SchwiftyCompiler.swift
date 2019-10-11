@@ -8,6 +8,8 @@
 
 import Foundation
 
+let schwifty = SchwiftyCompiler(highlightSyntax: true, string: nil)
+
 class SchwiftyCompiler: Codable {
     // MARK: - Basics
     var delegate: SchwiftyDelegate? = nil
@@ -50,7 +52,8 @@ class SchwiftyCompiler: Codable {
     // TODO: Add support for creating a light compiler for a highlighter
     /*
      This would theoretically support a highlighter for applications that don't need a full compiler.
-     */init(highlightSyntax: Bool, string: String?) {
+     */
+    init(highlightSyntax: Bool, string: String?) {
         self.highlightSyntax = highlightSyntax
         if string != nil {
             self.rawString = string!
@@ -66,24 +69,17 @@ class SchwiftyCompiler: Codable {
     // MARK: - Interpreter - Line
     //Splits the raw code string into string components based on newlines.
     func interpretLines(codeString: String) {
-        let codeLines = codeString.components(separatedBy: .newlines)
         print("\r\t Interpreted Lines\r")
+        
+        let codeLines = codeString.components(separatedBy: .newlines)
+        
         for (int, lineString) in codeLines.enumerated() {
             
             let line = Line(text: lineString, pos: int, words: [], theOperator: nil)
             
-            // MARK: Line number
-            // TODO: Line number support
-            /*
-             let lineNumberWord = Word(string: (String(int) + "\t"))
-             lineNumberWord.variable?.type = .LineNumberType
-             line.words.append(lineNumberWord)
-             self.state.variables.append(lineNumberWord.variable!)
-             */
-            
             // MARK: Interpreter - Word
             //Splits the line String into string components based on whitespace.
-            let codeWords = line.text.components(separatedBy: .whitespaces)
+            let codeWords = line.string.components(separatedBy: .whitespaces)
             for (_,word) in codeWords.enumerated() {
                 
                 //Creates a new word and adds its variable to the state.
@@ -112,6 +108,8 @@ class SchwiftyCompiler: Codable {
                     // Unknown type or error
                     if !(variable3.type.isValue()) {
                         variable3.type = .ErrorType
+                        //Adds whole line error
+//                        line.hasError = true
                         print("L:\(lineNumber): \(variable3.string) : Not a supported value")
                         continue
                     }
@@ -125,10 +123,7 @@ class SchwiftyCompiler: Codable {
                 
                 // Modify existing variable
                 if variable2.theOperator?.isAssignOperator() ?? false {
-                    for (_,existingVariable) in state.variables.enumerated() {
-                        if (variable1.string == existingVariable.string) {
-                            print("L:\(lineNumber): \(variable1.string) \(variable2.theOperator!.string()) : I have already been assigned")
-                        }
+                    if state.hasVariable(variable: variable1) {print("L:\(lineNumber): \(variable1.string) \(variable2.theOperator!.string())  : I have already been assigned")
                     }
                 }
                 
@@ -140,7 +135,7 @@ class SchwiftyCompiler: Codable {
         
         print("\r\t Assigned Vars\r")
         for (_,stateVariable) in state.variables.enumerated() {
-            print(stateVariable.string,(": "), stateVariable.value!.string)
+            print(stateVariable.string, (": "), stateVariable.value!.string, (": "), stateVariable.value!.typeDescription())
         }
     }
     

@@ -8,7 +8,6 @@
 
 import Cocoa
 
-let schwifty = SchwiftyCompiler(highlightSyntax: true, string: nil)
 
 class ViewController: NSViewController, SchwiftyDelegate, NSTextViewDelegate {
     
