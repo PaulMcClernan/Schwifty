@@ -16,7 +16,7 @@ struct ErrorSchwifty: Codable {
     var length = 0
 }
 
-// MARK: State
+// MARK: - State
 // This is where the compiler stores it's state. Conforms to Codable to theoretically support state save.
 class SchwiftyState: Codable {
     var version = 0.1
@@ -38,7 +38,8 @@ class SchwiftyState: Codable {
     
 }
 
-// MARK: Line
+// MARK: - Line
+// TODO: Reoganize and make this look prettier.
 // This is where the compiler stores it's state. Conforms to Codable to theoretically support state save.
 class Line: Codable {
     var string =  ""
@@ -48,6 +49,7 @@ class Line: Codable {
     var isEditing = false
     
     var words: [Word] = []
+    var blockWords: [Word] = []
     
     var theOperator: Operators? = nil
     
@@ -62,11 +64,24 @@ class Line: Codable {
         self.pos = pos
         self.words = words
         self.theOperator = theOperator
+        
+        
     }
     
-    
+    // MARK: Interpreter - Word
+    func interpretWords() {
+        let codeWords = self.string.components(separatedBy: .whitespaces)
+        for (_,word) in codeWords.enumerated() {
+            
+            //Creates a new word and adds its variable to the state.
+            let newWord = Word(string: word)
+            self.words.append(newWord)
+        }
+    }
 }
 
+// MARK: - Word
+//
 class Word: Codable {
     var name = ""
     var pos = 0
@@ -241,6 +256,8 @@ class Word: Codable {
     
 }
 
+// MARK: - Types
+//
 enum Types: String {
     case ErrorType
     
@@ -334,8 +351,18 @@ enum Operators: String, CaseIterable {
     case rightCrotchet = "]"
     
     case ifOp = "if"
+    func isIfBlock() -> Bool {
+        switch self {
+        case .ifOp:
+            return true
+        default:
+            return false
+        }
+    }
 }
 
+// MARK: - Default Input
+// This is where the compiler stores it's state. Conforms to Codable to theoretically support state save.
 let defaultInput = """
 var a = 5
 let b = 1

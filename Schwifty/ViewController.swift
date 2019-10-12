@@ -18,7 +18,7 @@ class ViewController: NSViewController, SchwiftyDelegate, NSTextViewDelegate {
         // Do any additional setup after loading the view.
         schwifty.delegate = self
         inPutField.delegate = self
-        schwifty.rawString = defaultInput
+        schwifty.string = defaultInput
     }
     
     override var representedObject: Any? {
@@ -29,7 +29,7 @@ class ViewController: NSViewController, SchwiftyDelegate, NSTextViewDelegate {
     
     func textDidChange(_ notification: Notification) {
         if let field = notification.object as? NSTextView {
-        schwifty.rawString = field.string
+        schwifty.string = field.string
         }
     }
     
@@ -39,7 +39,7 @@ class ViewController: NSViewController, SchwiftyDelegate, NSTextViewDelegate {
             inPutField.textStorage?.setAttributedString(schwifty.attributedString!)
             inPutField.selectedRanges = selectedRanges
         } else {
-            inPutField.string = schwifty.rawString ?? "no code"
+            inPutField.string = schwifty.string ?? "no code"
         }
     }
     

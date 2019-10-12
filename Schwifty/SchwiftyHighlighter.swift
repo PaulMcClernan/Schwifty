@@ -83,25 +83,7 @@ class SchwiftyHighlighter: Codable {
     let kDefaultFontSize: CGFloat = 15.0
     let kDefaultFontSizeSmall: CGFloat = 12.0
     
-    //    private func AssignOperatorAttributes(_ variable: Word, _ multipleAttributes: inout [NSAttributedString.Key : Any]) {
-    //        var font = NSFont.systemFont(ofSize: kDefaultFontSize, weight: .medium)
-    //        multipleAttributes[NSAttributedString.Key.font] = font
-    //
-    //        switch variable.theOperator {
-    //        case .letOp, .varOp, .ifOp:
-    //            let font = NSFont.systemFont(ofSize: kDefaultFontSize, weight: .bold)
-    //            multipleAttributes[NSAttributedString.Key.font] = font
-    //            multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemPurple
-    //            return
-    //        default:
-    //            font = NSFont.systemFont(ofSize: kDefaultFontSize, weight: .regular)
-    //            multipleAttributes[NSAttributedString.Key.font] = font
-    //            multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemPink
-    //        }
-    //
-    //    }
-    
-    // TODO: THis code need much simplyfication
+    // FIXME: THis code need much simplyfication
     
     func attributesForLine(line: String) -> NSAttributedString {
         var multipleAttributes = [NSAttributedString.Key : Any]()
