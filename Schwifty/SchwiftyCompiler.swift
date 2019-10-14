@@ -8,12 +8,13 @@
 
 import Foundation
 
-let schwifty = SchwiftyCompiler(highlightSyntax: true, string: nil)
+let schwifty = SchwiftyCompiler(isLight: false, highlightSyntax: true, string: nil)
 
 class SchwiftyCompiler: Codable {
     // MARK: - Basics
     var delegate: SchwiftyDelegate? = nil
     var state = SchwiftyState()
+    var lightCompile = false
     
     // MARK: Syntax Highlighting
     var highlightSyntax = false
@@ -38,7 +39,7 @@ class SchwiftyCompiler: Codable {
                 analyzeLines(codeString: codeString)
                 
                 ///Syntax Highlighting
-                if highlightSyntax {
+                if highlightSyntax && !lightCompile {
                     syntaxHighlighter = SchwiftyHighlighter(compiler: self, rawString: codeString)
                     self.attributedString = syntaxHighlighter?.attributedString
                 }
@@ -54,7 +55,8 @@ class SchwiftyCompiler: Codable {
     /*
      This would theoretically support a highlighter for applications that don't need a full compiler.
      */
-    init(highlightSyntax: Bool, string: String?) {
+    init(isLight: Bool, highlightSyntax: Bool, string: String?) {
+        self.lightCompile = isLight
         self.highlightSyntax = highlightSyntax
         if string != nil {
             self.string = string!
@@ -70,58 +72,14 @@ class SchwiftyCompiler: Codable {
     // MARK: - Analyze - Line
     //Splits the raw code string into string components based on newlines.
     func analyzeLines(codeString: String) {
-        print("\r\t Analyzed Lines\r")
+       print("\r\t Analyzed Lines\r")
         
         let codeLines = codeString.components(separatedBy: .newlines)
         
         for (int, lineString) in codeLines.enumerated() {
             
             let line = Line(text: lineString, pos: int, words: [], theOperator: nil)
-            
-            // MARK: Interpreter - Word
-            // Step 1 - Splits the line String into string components based on whitespace.
-            line.interpretWords()
-            
             state.lines.append(line)
-            
-            // MARK: - *End of Compiler Light*
-            // Past here lies any code that should be used for scripting.
-            
-            // MARK: - Line Pattern
-            // Step 2 - Patterns
-            if line.words.count > 3 {
-                let lineNumber = line.pos
-                
-                // MARK: Assign values to variable
-                let variable1 = line.words[0] /// likely let/var or var ie "Let " or "foo "
-                let variable2 = line.words[1] /// likely var or assignOp ie "foo " or "= "
-                let variable3 = line.words[3] /// likely var ie "foo " or "\"foo\"" | "3.14" | "false"
-                
-                if (variable1.theOperator?.isCreateVariable() ?? false) {
-                    
-                    // Unknown type or error
-                    if !(variable3.type.isValue()) {
-                        variable3.type = .ErrorType
-                        //Adds whole line error
-//                        line.hasError = true
-                        print("L:\(lineNumber): \(variable3.string):Not a supported value")
-                        continue
-                    }
-                    
-                    // var found
-                    variable2.value = variable3
-                    state.variables.append(variable2)
-                    print("L:\(lineNumber): \(variable2.description())")
-                    continue
-                }
-                
-                // Modify existing variable
-                if variable2.theOperator?.isAssignOperator() ?? false {
-                    if state.hasVariable(variable: variable1) {print("L:\(lineNumber): \(variable1.string) \(variable2.theOperator!.string()):I have already been assigned")
-                    }
-                }
-                
-            }
             //Adds line to state
             
         }

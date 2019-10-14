@@ -49,7 +49,7 @@ class Line: Codable {
     var isEditing = false
     
     var words: [Word] = []
-    var blockWords: [Word] = []
+    var block: Block? = nil
     
     var theOperator: Operators? = nil
     
@@ -65,18 +65,60 @@ class Line: Codable {
         self.words = words
         self.theOperator = theOperator
         
+        analyzeWords()
+        interpretLine()
+        
+        self.block = Block(words: self.words)
         
     }
     
-    // MARK: Interpreter - Word
-    func interpretWords() {
+    // MARK: Analyze - Word
+    // Splits the line String into string components based on whitespace.
+    func analyzeWords() {
         let codeWords = self.string.components(separatedBy: .whitespaces)
         for (_,word) in codeWords.enumerated() {
-            
             //Creates a new word and adds its variable to the state.
             let newWord = Word(string: word)
             self.words.append(newWord)
         }
+    }
+    
+    func interpretLine() {
+        // MARK: - Line Pattern
+        // Step 2 - Patterns
+        if self.words.count > 3 {
+        let lineNumber = self.pos
+                        
+                        // MARK: Assign values to variable
+                        let variable1 = self.words[0] /// likely let/var or var ie "Let " or "foo "
+                        let variable2 = self.words[1] /// likely var or assignOp ie "foo " or "= "
+                        let variable3 = self.words[3] /// likely var ie "foo " or "\"foo\"" | "3.14" | "false"
+                        
+                        if (variable1.theOperator?.isCreateVariable() ?? false) {
+                            
+                            // Unknown type or error
+                            if !(variable3.type.isValue()) {
+                                variable3.type = .ErrorType
+                                //Adds whole line error
+        //                        line.hasError = true
+                                print("L:\(lineNumber): \(variable3.string):Not a supported value")
+                                return
+                            }
+                            
+                            // var found
+                            variable2.value = variable3
+                                schwifty.state.variables.append(variable2)
+                            print("L:\(lineNumber): \(variable2.description())")
+                            return
+                        }
+                        
+                        // Modify existing variable
+                        if variable2.theOperator?.isAssignOperator() ?? false {
+                            if schwifty.state.hasVariable(variable: variable1) {print("L:\(lineNumber): \(variable1.string) \(variable2.theOperator!.string()):I have already been assigned")
+                            }
+                        }
+                        
+                    }
     }
 }
 
@@ -102,15 +144,11 @@ class Word: Codable {
         if (self.type == .CommandsType) {
             typeString = command!.rawValue
             return typeString
-            
         }
-        
         if (self.type == .OperatorType) {
             typeString = self.theOperator!.rawValue
             return typeString
-            
         }
-        
         if (self.value != nil) {
             if (self.value!.isValue()) {
                 typeString = self.value!.string
@@ -119,7 +157,6 @@ class Word: Codable {
         else {
             typeString = self.type.rawValue
         }
-        
         return typeString
     }
     
@@ -161,8 +198,9 @@ class Word: Codable {
         }
     }
     
-    func ContainsValidQoute(string: String) -> Bool {
-        if string == "\"" || string == "\u{201C}" || string == "\u{201D}" {
+    func isQoute(string: String) -> Bool {
+        let qoutes = CharacterSet(charactersIn: "\"\u{201C}\u{201D}")
+        if string.rangeOfCharacter(from: qoutes) != nil {
             return true
         }
         return false
@@ -170,11 +208,10 @@ class Word: Codable {
     
     func isString() -> Bool {
         
-        if ContainsValidQoute(string: String(string.prefix(1))) && ContainsValidQoute(string: String(string.suffix(1))) {
+        if isQoute(string: String(string.prefix(1))) && isQoute(string: String(string.suffix(1))) {
             type = .StringType
             return true
         }
-        
         return false
     }
     
@@ -299,6 +336,8 @@ enum Commands: String, CaseIterable {
 }
 
 enum Operators: String, CaseIterable {
+    //
+    //
     case letOp = "let"
     case varOp = "var"
     func isCreateVariable() -> Bool {
@@ -314,41 +353,60 @@ enum Operators: String, CaseIterable {
         return self.rawValue
     }
     
+    //MultiplicationPrecedence
+    //Left associative
+    case multOp = "*"
+    case divOp = "/"
+    case remainderOp = "%"
+    
+    //AdditionPrecedence
+    //Left associative
+    case addOp = "+"
+    case subOp = "-"
+    
+    //NilCoalescingPrecedence
+    //Right associative
+    case nilCoalescingOp = "??"
+    
+    //ComparisonPrecedence
+    //None
+    case lessop = "<"
+    case lessEqualop = "<="
+    case greaterOp = ">"
+    case greaterEqualOp = ">="
+    case equalsOp = "=="
+    case notOp = "!="
+    
+    //LogicalConjunctionPrecedence
+    //Left associative
+    case andOp = "&&"
+    case orOp = "||"
+    
+    //AssignmentPrecedence
+    //Right associative
     case assignOp = "="
+    case multAssignOp = "*="
+    case divAssignOp = "/="
+    case remainderAssignOp = "%="
     case additionAssignOp = "+="
     case subAssignOp = "-="
     func isAssignOperator() -> Bool {
         switch self {
-        case .assignOp, .additionAssignOp, .subAssignOp:
+        case .assignOp, .multAssignOp, .divAssignOp, .remainderOp, .additionAssignOp, .subAssignOp:
             return true
         default:
             return false
         }
     }
     
-    case addOp = "+"
-    case subOp = "-"
-    case multOp = "*"
-    case divOp = "/"
-    
-    case remainderOp = "%"
-    
-    case equalsOp = "=="
-    case notOp = "!="
-    
-    case greaterOp = ">"
-    case lessop = "<"
-    case greaterEqualOp = ">="
-    case lessEqualop = "<="
-    
-    case leftParentheses = "("
-    case rightParentheses = ")"
+    case leftCrotchet = "["
+    case rightCrotchet = "]"
     
     case leftBracket = "{"
     case rightBracket = "}"
     
-    case leftCrotchet = "["
-    case rightCrotchet = "]"
+    case leftParentheses = "("
+    case rightParentheses = ")"
     
     case ifOp = "if"
     func isIfBlock() -> Bool {
