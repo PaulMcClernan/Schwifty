@@ -3,30 +3,24 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		3C03E8F7234AEB990088FA33 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 3C03E8F5234AEB990088FA33 /* README.md */; };
 		3C03E8F8234AEB990088FA33 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 3C03E8F6234AEB990088FA33 /* LICENSE */; };
-		3C03E8FA234BBC2E0088FA33 /* SchwiftyHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C03E8F9234BBC2E0088FA33 /* SchwiftyHighlighter.swift */; };
-		3C346E70235535C600A421A6 /* DefaultInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C346E6F235535C600A421A6 /* DefaultInput.swift */; };
-		3C5ADA662351714E002EAF37 /* SchwiftyBlocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5ADA652351714E002EAF37 /* SchwiftyBlocks.swift */; };
 		3C67A71923428A2100E972DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C67A71823428A2100E972DE /* AppDelegate.swift */; };
 		3C67A71B23428A2100E972DE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C67A71A23428A2100E972DE /* ViewController.swift */; };
 		3C67A71D23428A2300E972DE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C67A71C23428A2300E972DE /* Assets.xcassets */; };
 		3C67A72023428A2300E972DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C67A71E23428A2300E972DE /* Main.storyboard */; };
-		3C67A72923428A3500E972DE /* defaultInput in Resources */ = {isa = PBXBuildFile; fileRef = 3C67A72823428A3500E972DE /* defaultInput */; };
-		3C67A72B23429C7900E972DE /* SchwiftyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C67A72A23429C7900E972DE /* SchwiftyModels.swift */; };
-		3C67A72D2342A12100E972DE /* SchwiftyCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C67A72C2342A12100E972DE /* SchwiftyCompiler.swift */; };
+		D77479B526F70AB800E2FBA4 /* SwiftScriptCompiler in Frameworks */ = {isa = PBXBuildFile; productRef = D77479B426F70AB800E2FBA4 /* SwiftScriptCompiler */; };
+		D77479B726F70CA000E2FBA4 /* defaultInput in Resources */ = {isa = PBXBuildFile; fileRef = D77479B626F70CA000E2FBA4 /* defaultInput */; settings = {ASSET_TAGS = (defaultInput, ); }; };
+		D77479B926F70E0F00E2FBA4 /* DefaultInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77479B826F70E0F00E2FBA4 /* DefaultInput.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		3C03E8F5234AEB990088FA33 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		3C03E8F6234AEB990088FA33 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		3C03E8F9234BBC2E0088FA33 /* SchwiftyHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchwiftyHighlighter.swift; sourceTree = "<group>"; };
-		3C346E6F235535C600A421A6 /* DefaultInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultInput.swift; sourceTree = "<group>"; };
-		3C5ADA652351714E002EAF37 /* SchwiftyBlocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchwiftyBlocks.swift; sourceTree = "<group>"; };
 		3C67A71523428A2100E972DE /* Schwifty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Schwifty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C67A71823428A2100E972DE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3C67A71A23428A2100E972DE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -34,9 +28,8 @@
 		3C67A71F23428A2300E972DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3C67A72123428A2300E972DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C67A72223428A2300E972DE /* Schwifty.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Schwifty.entitlements; sourceTree = "<group>"; };
-		3C67A72823428A3500E972DE /* defaultInput */ = {isa = PBXFileReference; lastKnownFileType = text; path = defaultInput; sourceTree = "<group>"; };
-		3C67A72A23429C7900E972DE /* SchwiftyModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchwiftyModels.swift; sourceTree = "<group>"; };
-		3C67A72C2342A12100E972DE /* SchwiftyCompiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchwiftyCompiler.swift; sourceTree = "<group>"; };
+		D77479B626F70CA000E2FBA4 /* defaultInput */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; path = defaultInput; sourceTree = "<group>"; };
+		D77479B826F70E0F00E2FBA4 /* DefaultInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultInput.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D77479B526F70AB800E2FBA4 /* SwiftScriptCompiler in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,13 +67,9 @@
 			children = (
 				3C67A71823428A2100E972DE /* AppDelegate.swift */,
 				3C67A71A23428A2100E972DE /* ViewController.swift */,
-				3C67A72823428A3500E972DE /* defaultInput */,
-				3C346E6F235535C600A421A6 /* DefaultInput.swift */,
+				D77479B826F70E0F00E2FBA4 /* DefaultInput.swift */,
+				D77479B626F70CA000E2FBA4 /* defaultInput */,
 				3C67A71C23428A2300E972DE /* Assets.xcassets */,
-				3C67A72A23429C7900E972DE /* SchwiftyModels.swift */,
-				3C5ADA652351714E002EAF37 /* SchwiftyBlocks.swift */,
-				3C67A72C2342A12100E972DE /* SchwiftyCompiler.swift */,
-				3C03E8F9234BBC2E0088FA33 /* SchwiftyHighlighter.swift */,
 				3C67A71E23428A2300E972DE /* Main.storyboard */,
 				3C67A72123428A2300E972DE /* Info.plist */,
 				3C67A72223428A2300E972DE /* Schwifty.entitlements */,
@@ -103,6 +93,9 @@
 			dependencies = (
 			);
 			name = Schwifty;
+			packageProductDependencies = (
+				D77479B426F70AB800E2FBA4 /* SwiftScriptCompiler */,
+			);
 			productName = Schwifty;
 			productReference = 3C67A71523428A2100E972DE /* Schwifty.app */;
 			productType = "com.apple.product-type.application";
@@ -113,6 +106,9 @@
 		3C67A70D23428A2100E972DE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				KnownAssetTags = (
+					defaultInput,
+				);
 				LastSwiftUpdateCheck = 1100;
 				LastUpgradeCheck = 1300;
 				ORGANIZATIONNAME = "Dennis Hernandez";
@@ -131,6 +127,9 @@
 				Base,
 			);
 			mainGroup = 3C67A70C23428A2100E972DE;
+			packageReferences = (
+				D77479B326F70AB800E2FBA4 /* XCRemoteSwiftPackageReference "SwiftScript" */,
+			);
 			productRefGroup = 3C67A71623428A2100E972DE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -146,8 +145,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C67A71D23428A2300E972DE /* Assets.xcassets in Resources */,
-				3C67A72923428A3500E972DE /* defaultInput in Resources */,
 				3C03E8F7234AEB990088FA33 /* README.md in Resources */,
+				D77479B726F70CA000E2FBA4 /* defaultInput in Resources */,
 				3C67A72023428A2300E972DE /* Main.storyboard in Resources */,
 				3C03E8F8234AEB990088FA33 /* LICENSE in Resources */,
 			);
@@ -160,12 +159,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C5ADA662351714E002EAF37 /* SchwiftyBlocks.swift in Sources */,
-				3C67A72B23429C7900E972DE /* SchwiftyModels.swift in Sources */,
-				3C03E8FA234BBC2E0088FA33 /* SchwiftyHighlighter.swift in Sources */,
-				3C67A72D2342A12100E972DE /* SchwiftyCompiler.swift in Sources */,
-				3C346E70235535C600A421A6 /* DefaultInput.swift in Sources */,
 				3C67A71B23428A2100E972DE /* ViewController.swift in Sources */,
+				D77479B926F70E0F00E2FBA4 /* DefaultInput.swift in Sources */,
 				3C67A71923428A2100E972DE /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -363,6 +358,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D77479B326F70AB800E2FBA4 /* XCRemoteSwiftPackageReference "SwiftScript" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/doHernandezM/SwiftScript";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D77479B426F70AB800E2FBA4 /* SwiftScriptCompiler */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D77479B326F70AB800E2FBA4 /* XCRemoteSwiftPackageReference "SwiftScript" */;
+			productName = SwiftScriptCompiler;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3C67A70D23428A2100E972DE /* Project object */;
 }
