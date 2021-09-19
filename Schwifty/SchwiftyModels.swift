@@ -49,7 +49,9 @@ class Line: Codable {
     var isEditing = false
     
     var words: [Word] = []
+    
     var block: Block? = nil
+    var blockCommands: [String:LineCommand] = [:]
     
     var theOperator: Operators? = nil
     
@@ -65,10 +67,15 @@ class Line: Codable {
         self.words = words
         self.theOperator = theOperator
         
-        analyzeWords()
-        interpretLine()
+//        print(("L"),(self.pos),("---------------------------------------------------------------------------------------------- \r"),self.string)
         
-        self.block = Block(words: self.words)
+        analyzeWords()
+        
+        interpretLine()
+//         print(blockCommands)
+        
+        
+        //        self.block = Block(words: self.words)
         
     }
     
@@ -86,39 +93,58 @@ class Line: Codable {
     func interpretLine() {
         // MARK: - Line Pattern
         // Step 2 - Patterns
-        if self.words.count > 3 {
-        let lineNumber = self.pos
-                        
-                        // MARK: Assign values to variable
-                        let variable1 = self.words[0] /// likely let/var or var ie "Let " or "foo "
-                        let variable2 = self.words[1] /// likely var or assignOp ie "foo " or "= "
-                        let variable3 = self.words[3] /// likely var ie "foo " or "\"foo\"" | "3.14" | "false"
-                        
-                        if (variable1.theOperator?.isCreateVariable() ?? false) {
-                            
-                            // Unknown type or error
-                            if !(variable3.type.isValue()) {
-                                variable3.type = .ErrorType
-                                //Adds whole line error
-        //                        line.hasError = true
-                                print("L:\(lineNumber): \(variable3.string):Not a supported value")
-                                return
-                            }
-                            
-                            // var found
-                            variable2.value = variable3
-                                schwifty.state.variables.append(variable2)
-                            print("L:\(lineNumber): \(variable2.description())")
+        // MARK: Assign values to variable
+        let variable1 = self.words[0] /// likely let/var or var ie "Let " or "foo "
+        
+        //        if self.words.count > 0 {
+        //            // Modify existing variable
+        //            if variable1.string.contains(Operators.ifOp.rawValue)  {
+        //                print("Iffy")
+        //                blockCommands["ConditionalIf"] = LineCommand.ConditionalIf
+        //
+        //
+        //
+        //                if self.pos > 0 {return}
+        //                let lastLine = schwifty.state.lines[self.pos - 1]
+        //            }
+        //        }
+        //
+        if self.words.count > 1 {
+            
+            let variable2 = self.words[1]/// likely var or assignOp ie "foo " or "= "
+            
+            // Modify existing variable
+            if (variable2.theOperator?.isAssignOperator() ?? false)  {
+                blockCommands["Assign"] = LineCommand.Assign
+                return
+            }
+            
+            if (variable1.theOperator?.isCreateVariable() ?? false) {
+                
+                ///I"m not really sure what's going on here '<=4' then '>=4'??? WTF
+                if self.words.count <= 4 {
+//                    print(self.words)
+//                    print("|||||||||||||||||||\r\r")
+                    if self.words.count >= 4 {
+                        let variable3 = self.words[3]
+                        ///likely var ie "foo " or "\"foo\"" | "3.14" | "false"
+                        if !(variable3.type.isValue()) {
+                            variable3.type = .ErrorType
+                            //Adds whole line error
                             return
                         }
                         
-                        // Modify existing variable
-                        if variable2.theOperator?.isAssignOperator() ?? false {
-                            if schwifty.state.hasVariable(variable: variable1) {print("L:\(lineNumber): \(variable1.string) \(variable2.theOperator!.string()):I have already been assigned")
-                            }
-                        }
-                        
+                        // var found
+                        blockCommands["Create"] = LineCommand.Create// Unknown type or error
+                        variable2.value = variable3
+                        schwifty.state.variables.append(variable2)
+                        return
                     }
+                }
+            }
+            
+        }
+        
     }
 }
 
@@ -133,6 +159,8 @@ class Word: Codable {
     var number: NSNumber? = nil
     var command: Commands? = nil
     var theOperator: Operators? = nil
+    
+    var blockCommands: [String:LineCommand] = [:]
     
     var value: Word? = nil
     
@@ -182,20 +210,6 @@ class Word: Codable {
         
         assingType()
         
-        if type == .ErrorType {
-            
-        }
-    }
-    
-    init(newVariable: String, varName: String) {
-        self.string = newVariable
-        name = varName
-        
-        assingType()
-        
-        if type == .ErrorType {
-            
-        }
     }
     
     func isQoute(string: String) -> Bool {
@@ -228,6 +242,7 @@ class Word: Codable {
         for (_,anOpertator) in Operators.allCases.enumerated() {
             if string == anOpertator.rawValue {
                 theOperator = anOpertator
+//                print(("OP:"),anOpertator.string())
                 type = .OperatorType
                 return
             }
@@ -268,16 +283,16 @@ class Word: Codable {
         switch numberType {
         case .charType:
             type = .BoolType
-        //Bool
+            //Bool
         case .sInt8Type, .sInt16Type, .sInt32Type, .sInt64Type, .shortType, .intType, .longType, .longLongType, .cfIndexType, .nsIntegerType:
             type = .IntType
-        //Int
+            //Int
         case .doubleType:
             type = .DoubleType
-        //Double
+            //Double
         case .float32Type, .float64Type, .floatType, .cgFloatType:
             type = .FloatType
-        //Float
+            //Float
         default:
             type = .ErrorType
         }
@@ -303,6 +318,7 @@ enum Types: String {
     case CommandsType
     case OperatorType
     case VarType
+    case VarOpType
     
     case StringType
     case IntType
@@ -362,7 +378,7 @@ enum Operators: String, CaseIterable {
     //AdditionPrecedence
     //Left associative
     case addOp = "+"
-    case subOp = "-"
+    case subOp = "-" //Also signOp
     
     //NilCoalescingPrecedence
     //Right associative
@@ -423,35 +439,35 @@ enum Operators: String, CaseIterable {
 // This is where the compiler stores it's state. Conforms to Codable to theoretically support state save.
 let defaultInput = """
 var a = 5
-let b = 1
-let c = a + b
+var b = 1
+var c = a + b
 let d = false
 let e = -3.14
-let f = 5
+var f = 5
 let g = -a
 let h = "House"
 let i = "ion"
-let j = "jet
-let k = "redKite
+let j = "jet"
+let k = "redKite"
 let l = 01234567891011
-let m = 200e500
+let m = 200e50
 let n = f
 let o = 0
 
-if a = 5 {
-a = b + a
-}
-
-f += 1
-b = b + 1
-
-print(a)
-
-
-print(c)
-
-a += a
-
-print(a)
+//func foo() {
+    if a == 5 {
+        a = b + a
+    }
+    
+    f += 1
+    b = b + 1
+    
+    a += a
+    
+    print(a)
+    print(b)
+    print(c)
+    print(f)
+//}
 
 """

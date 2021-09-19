@@ -7,8 +7,10 @@
 //
 
 import Foundation
+//import SchwiftyBlocks
 
 let schwifty = SchwiftyCompiler(isLight: false, highlightSyntax: true, string: nil)
+let kDebug = true
 
 class SchwiftyCompiler: Codable {
     // MARK: - Basics
@@ -72,18 +74,27 @@ class SchwiftyCompiler: Codable {
     // MARK: - Analyze - Line
     //Splits the raw code string into string components based on newlines.
     func analyzeLines(codeString: String) {
-       print("\r\t Analyzed Lines\r")
+//        print("\r\t Analyzed Lines\r")
         
         let codeLines = codeString.components(separatedBy: .newlines)
         
         for (int, lineString) in codeLines.enumerated() {
             
             let line = Line(text: lineString, pos: int, words: [], theOperator: nil)
-            state.lines.append(line)
             //Adds line to state
-            
+            state.lines.append(line)
+
         }
         
+        
+        if lightCompile {
+            return
+        }
+        
+        /// if not debug mode stop
+        if !kDebug {return}
+        
+        ///This is non-essential debiug code.
         print("\r\t Assigned Vars\r")
         for (_,stateVariable) in state.variables.enumerated() {
             print("\(stateVariable.string), \(stateVariable.value!.string), \(stateVariable.value!.typeDescription())")

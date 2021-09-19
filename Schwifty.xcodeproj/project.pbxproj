@@ -10,6 +10,7 @@
 		3C03E8F7234AEB990088FA33 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 3C03E8F5234AEB990088FA33 /* README.md */; };
 		3C03E8F8234AEB990088FA33 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 3C03E8F6234AEB990088FA33 /* LICENSE */; };
 		3C03E8FA234BBC2E0088FA33 /* SchwiftyHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C03E8F9234BBC2E0088FA33 /* SchwiftyHighlighter.swift */; };
+		3C346E70235535C600A421A6 /* DefaultInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C346E6F235535C600A421A6 /* DefaultInput.swift */; };
 		3C5ADA662351714E002EAF37 /* SchwiftyBlocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5ADA652351714E002EAF37 /* SchwiftyBlocks.swift */; };
 		3C67A71923428A2100E972DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C67A71823428A2100E972DE /* AppDelegate.swift */; };
 		3C67A71B23428A2100E972DE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C67A71A23428A2100E972DE /* ViewController.swift */; };
@@ -24,6 +25,7 @@
 		3C03E8F5234AEB990088FA33 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		3C03E8F6234AEB990088FA33 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		3C03E8F9234BBC2E0088FA33 /* SchwiftyHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchwiftyHighlighter.swift; sourceTree = "<group>"; };
+		3C346E6F235535C600A421A6 /* DefaultInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultInput.swift; sourceTree = "<group>"; };
 		3C5ADA652351714E002EAF37 /* SchwiftyBlocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchwiftyBlocks.swift; sourceTree = "<group>"; };
 		3C67A71523428A2100E972DE /* Schwifty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Schwifty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C67A71823428A2100E972DE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 				3C67A71823428A2100E972DE /* AppDelegate.swift */,
 				3C67A71A23428A2100E972DE /* ViewController.swift */,
 				3C67A72823428A3500E972DE /* defaultInput */,
+				3C346E6F235535C600A421A6 /* DefaultInput.swift */,
 				3C67A71C23428A2300E972DE /* Assets.xcassets */,
 				3C67A72A23429C7900E972DE /* SchwiftyModels.swift */,
 				3C5ADA652351714E002EAF37 /* SchwiftyBlocks.swift */,
@@ -111,7 +114,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1120;
+				LastUpgradeCheck = 1300;
 				ORGANIZATIONNAME = "Dennis Hernandez";
 				TargetAttributes = {
 					3C67A71423428A2100E972DE = {
@@ -161,6 +164,7 @@
 				3C67A72B23429C7900E972DE /* SchwiftyModels.swift in Sources */,
 				3C03E8FA234BBC2E0088FA33 /* SchwiftyHighlighter.swift in Sources */,
 				3C67A72D2342A12100E972DE /* SchwiftyCompiler.swift in Sources */,
+				3C346E70235535C600A421A6 /* DefaultInput.swift in Sources */,
 				3C67A71B23428A2100E972DE /* ViewController.swift in Sources */,
 				3C67A71923428A2100E972DE /* AppDelegate.swift in Sources */,
 			);
@@ -206,6 +210,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -266,6 +271,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

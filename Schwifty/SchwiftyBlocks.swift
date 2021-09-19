@@ -34,17 +34,20 @@ class Block {
         if words == nil {return}
         
         self.words = words!
-        scanForBlocks()
+//        scanForBlocks()
     }
     
     func scanForBlocks() {
         
-        if words.count == 0 {return}
+        if words.count < 2 {return}
         
         var orderedWords: [Int:Word] = [:]
         
         for (i,word) in words.enumerated() {
             orderedWords[i] = word
+            
+            
+            
         }
         
         
@@ -104,6 +107,23 @@ class Block {
     }
     
     
+    
+    static func blocksFromLines(lines: [Line]?) -> [Block]? {
+        if lines == nil {return nil}
+        
+//        var mainBlock = Block(words: nil)
+        
+        for (_,_) in lines!.enumerated() {
+            
+            
+            
+        }
+        
+        
+        return nil
+    }
+    
+    
 }
 
 // MARK: init
@@ -114,10 +134,13 @@ class instruction: Codable {
 
 // MARK: - Types
 //
-enum BlockCommands {
+enum LineCommand: String, CaseIterable {
     case Create
     case Assign
-    case OperatorCommand
-    case Block
+    
+    case Command
+    
     case ConditionalIf
+    case ConditionalContinue
+    case ConditionalClose
 }

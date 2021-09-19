@@ -107,9 +107,9 @@ class SchwiftyHighlighter: Codable {
         
         switch word.type {
         case .ErrorType:
-            font = NSFont.monospacedSystemFont(ofSize: kDefaultFontSizeSmall, weight: .regular)
+            font = NSFont.monospacedSystemFont(ofSize: kDefaultFontSizeSmall, weight: .bold)
             multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemRed
-            multipleAttributes[NSAttributedString.Key.backgroundColor] = NSColor(calibratedHue: 0.0, saturation: 0.0, brightness: 0.9, alpha: 0.1)
+            multipleAttributes[NSAttributedString.Key.backgroundColor] = NSColor(calibratedHue: 0.0, saturation: 0.0, brightness: 0.5, alpha: 0.25)
         case .LineNumberType:
             font = NSFont.systemFont(ofSize: kDefaultFontSize, weight: .light)
             multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemGray
@@ -130,9 +130,9 @@ class SchwiftyHighlighter: Codable {
             }
         case .VarType:
             font = NSFont.monospacedSystemFont(ofSize: kDefaultFontSize, weight: .light)
-            multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemTeal
-        case .StringType:
             multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.textColor
+        case .StringType:
+            multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemRed
         case .IntType, .DoubleType, .FloatType:
             font = NSFont.monospacedSystemFont(ofSize: kDefaultFontSize, weight: .regular)
             multipleAttributes[NSAttributedString.Key.font] = font
@@ -141,6 +141,10 @@ class SchwiftyHighlighter: Codable {
             font = NSFont.monospacedSystemFont(ofSize: kDefaultFontSize, weight: .semibold)
             multipleAttributes[NSAttributedString.Key.font] = font
             multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemOrange
+        case .VarOpType:
+            font = NSFont.monospacedSystemFont(ofSize: kDefaultFontSize, weight: .semibold)
+            multipleAttributes[NSAttributedString.Key.font] = font
+            multipleAttributes[NSAttributedString.Key.foregroundColor] = NSColor.systemIndigo
         }
         
         let myAttrString = NSAttributedString(string: word.string, attributes: multipleAttributes)
